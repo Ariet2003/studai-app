@@ -1,61 +1,58 @@
+import React from 'react';
 import { 
-  ChartBarIcon, 
-  ChatBubbleBottomCenterTextIcon, 
-  ShieldCheckIcon, 
-  DocumentDuplicateIcon 
+  RocketLaunchIcon,
+  CircleStackIcon,
+  ChatBubbleBottomCenterTextIcon
 } from '@heroicons/react/24/outline';
 
 const features = [
   {
-    name: 'SLA 99,98%',
-    description: 'Гарантируем быстрый результат',
-    icon: ChartBarIcon,
+    title: 'Масштабирование «на лету»',
+    description: 'Наша система автоматически адаптируется под ваши потребности, обеспечивая мгновенную обработку заказов в любом количестве.',
+    icon: RocketLaunchIcon
   },
   {
-    name: 'Техподдержка 24/7',
-    description: 'Поможем в любое время',
-    icon: ChatBubbleBottomCenterTextIcon,
+    title: 'Устойчивая архитектура',
+    description: 'Используем передовые ИИ технологии для создания качественных академических работ с учетом всех требований.',
+    icon: CircleStackIcon
   },
   {
-    name: 'ФЗ-152 РФ',
-    description: 'Персональные данные защищены',
-    icon: ShieldCheckIcon,
-  },
-  {
-    name: 'Более 1200 готовых работ',
-    description: 'Можно купить за 50% стоимости',
-    icon: DocumentDuplicateIcon,
-  },
+    title: 'Поддержка 24/7',
+    description: 'Автоматизированная система поддержки доступна круглосуточно. Мгновенные ответы на ваши вопросы в любое время.',
+    icon: ChatBubbleBottomCenterTextIcon
+  }
 ];
 
 export default function Features() {
   return (
-    <div className="py-24 bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-            Обе партнерских программы включают в себя
-          </h2>
-        </div>
+    <div className="bg-[#0A0F23]">
+      <div className="w-full border-t border-gray-800" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <h2 className="text-3xl font-bold text-center text-white sm:text-4xl mb-16">
+          Почему нас выбирают
+        </h2>
 
-        <div className="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map((feature) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {features.map((feature, index) => (
             <div
-              key={feature.name}
-              className="relative rounded-2xl bg-white dark:bg-card-dark p-8 shadow-sm hover:shadow-md transition-shadow"
+              key={feature.title}
+              className={`relative rounded-2xl bg-[#181F38] p-8 ${
+                index === 1 ? 'lg:col-start-2' : index === 2 ? 'lg:col-span-2' : ''
+              }`}
             >
-              <div className="absolute -top-4 left-4">
-                <span className="inline-flex rounded-lg bg-primary-dark/10 p-3">
-                  <feature.icon className="h-6 w-6 text-primary" aria-hidden="true" />
-                </span>
-              </div>
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold leading-8 text-gray-900 dark:text-white">
-                  {feature.name}
-                </h3>
-                <p className="mt-2 text-base leading-7 text-gray-600 dark:text-gray-300">
-                  {feature.description}
-                </p>
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-white mb-4">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-400 text-lg">
+                    {feature.description}
+                  </p>
+                </div>
+                
+                <div className="relative w-32 h-32 flex-shrink-0 rounded-full bg-[#0A0F23] flex items-center justify-center">
+                  <feature.icon className="h-16 w-16 text-[#454CEE]" />
+                </div>
               </div>
             </div>
           ))}
