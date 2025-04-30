@@ -34,7 +34,7 @@ const services = [
 
 export default function Services() {
   return (
-    <div className="bg-[#0A0F23]">
+    <div id="services" className="bg-[#0A0F23]">
       <div className="w-full border-t border-gray-800" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="text-center mb-16">

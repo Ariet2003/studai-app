@@ -4,13 +4,20 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Header() {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#0A0F23] text-white">
+    <header className="sticky top-0 z-50 w-full bg-[#0A0F23]/95 backdrop-blur-sm text-white">
       <div className="container mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
           {/* Логотип */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
+            <button onClick={() => scrollToSection('hero')} className="flex items-center space-x-2">
               <Image
                 src="/logo.svg"
                 alt="StudAI Logo"
@@ -19,23 +26,35 @@ export default function Header() {
                 className="w-auto h-8"
               />
               <span className="text-xl font-bold text-white">StudAI</span>
-            </Link>
+            </button>
           </div>
 
           {/* Навигация */}
           <nav className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-8">
-            <Link href="/" className="text-gray-300 hover:text-white transition-colors">
-              Главная
-            </Link>
-            <Link href="/ready-works" className="text-gray-300 hover:text-white transition-colors">
-              Готовые работы
-            </Link>
-            <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors">
-              Прайс-лист
-            </Link>
-            <Link href="/contacts" className="text-gray-300 hover:text-white transition-colors">
-              Контакты
-            </Link>
+            <button 
+              onClick={() => scrollToSection('services')} 
+              className="text-gray-300 hover:text-white transition-colors"
+            >
+              Услуги
+            </button>
+            <button 
+              onClick={() => scrollToSection('features')} 
+              className="text-gray-300 hover:text-white transition-colors"
+            >
+              Преимущества
+            </button>
+            <button 
+              onClick={() => scrollToSection('pricing')} 
+              className="text-gray-300 hover:text-white transition-colors"
+            >
+              Цены
+            </button>
+            <button 
+              onClick={() => scrollToSection('order')} 
+              className="text-gray-300 hover:text-white transition-colors"
+            >
+              Заказать
+            </button>
           </nav>
 
           {/* Кнопки авторизации */}
