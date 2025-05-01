@@ -1,23 +1,53 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/dashboard');
+    }
+  }, [status, router]);
 
   const handleGoogleRegister = async () => {
-    setIsLoading(true);
-    // TODO: Добавить логику регистрации через Google
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      setError(null);
+      const result = await signIn('google', {
+        callbackUrl: '/dashboard',
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError('Произошла ошибка при регистрации через Google');
+        console.error('Google Sign In Error:', result.error);
+      } else if (result?.url) {
+        router.push(result.url);
+      }
+    } catch (err) {
+      setError('Произошла ошибка при регистрации через Google');
+      console.error('Google Sign In Error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleAppleRegister = async () => {
-    setIsLoading(true);
-    // TODO: Добавить логику регистрации через Apple
-    setIsLoading(false);
-  };
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-[#0A0F23] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-gray-300 border-t-[#454CEE] rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0A0F23] flex flex-col justify-center">
@@ -45,38 +75,31 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Кнопки регистрации */}
+          {/* Кнопка регистрации */}
           <div className="space-y-4">
             <button
               onClick={handleGoogleRegister}
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white hover:bg-gray-50 text-gray-900 font-medium rounded-xl transition-colors disabled:opacity-50"
             >
-              <Image
-                src="/google.svg"
-                alt="Google"
-                width={24}
-                height={24}
-                className="w-6 h-6"
-              />
-              Регистрация через Google
-            </button>
-
-            <button
-              onClick={handleAppleRegister}
-              disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-black hover:bg-gray-900 text-white font-medium rounded-xl transition-colors disabled:opacity-50"
-            >
-              <Image
-                src="/apple.svg"
-                alt="Apple"
-                width={24}
-                height={24}
-                className="w-6 h-6"
-              />
-              Регистрация через Apple ID
+              {isLoading ? (
+                <div className="w-6 h-6 border-2 border-gray-300 border-t-[#454CEE] rounded-full animate-spin" />
+              ) : (
+                <Image
+                  src="/google.svg"
+                  alt="Google"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6"
+                />
+              )}
+              {isLoading ? 'Выполняется регистрация...' : 'Регистрация через Google'}
             </button>
           </div>
+
+          {error && (
+            <p className="mt-4 text-sm text-red-500 text-center">{error}</p>
+          )}
 
           {/* Преимущества регистрации */}
           <div className="mt-8 p-6 bg-[#181F38] rounded-xl">

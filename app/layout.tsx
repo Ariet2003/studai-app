@@ -1,12 +1,13 @@
-import { Inter } from 'next/font/google';
-import Providers from '../components/Providers';
 import './globals.css';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import Providers from './providers';
 
-const inter = Inter({ subsets: ['latin', 'cyrillic'] });
+const inter = Inter({ subsets: ['latin'] });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Studai - Генератор студенческих работ',
-  description: 'Автоматическая генерация рефератов, докладов, СРС и курсовых работ за 5 минут',
+  description: 'Автоматическая генерация учебных работ с помощью искусственного интеллекта',
 };
 
 export default function RootLayout({
@@ -15,11 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" suppressHydrationWarning>
-      <body className={inter.className}>
-        <Providers>
-          {children}
-        </Providers>
+    <html lang="ru" className="dark">
+      <body className={`${inter.className} dark:bg-[#0A0F23]`}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
