@@ -50,7 +50,7 @@ CREATE TABLE "ReadyWork" (
     "title" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "pageCount" INTEGER NOT NULL,
-    "author" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
     "priceId" TEXT NOT NULL,
     "filePath" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -91,6 +91,9 @@ ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ReadyWork" ADD CONSTRAINT "ReadyWork_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ReadyWork" ADD CONSTRAINT "ReadyWork_priceId_fkey" FOREIGN KEY ("priceId") REFERENCES "Price"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

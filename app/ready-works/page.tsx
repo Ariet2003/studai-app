@@ -129,7 +129,7 @@ export default function ReadyWorksPage() {
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="text-lg font-semibold text-white mb-2">{work.title}</h3>
-                      <p className="text-gray-400 text-sm">Автор: {work.author}</p>
+                      <p className="text-gray-400 text-sm">Автор: {work.user.name || 'Аноним'}</p>
                     </div>
                     <span className="inline-block px-3 py-1 bg-[#0A0F23] text-[#454CEE] rounded-full text-sm font-medium">
                       {work.type}

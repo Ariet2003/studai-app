@@ -42,6 +42,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  works         ReadyWork[]
 }
 
 model VerificationToken {
@@ -57,7 +58,8 @@ model ReadyWork {
   title       String
   type        String   // Реферат, СРС, Доклад, Курсовая
   pageCount   Int
-  author      String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
   price       Price    @relation(fields: [priceId], references: [id])
   priceId     String
   filePath    String   // Путь к файлу в public/works

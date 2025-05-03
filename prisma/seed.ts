@@ -25,7 +25,7 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error('Ошибка при заполнении базы данных:', e);
     process.exit(1);
   })
   .finally(async () => {

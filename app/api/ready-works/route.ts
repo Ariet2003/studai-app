@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function GET() {
   try {
     const works = await prisma.readyWork.findMany({
       include: {
         price: true,
+        user: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -24,14 +27,22 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const title = formData.get('title') as string;
     const type = formData.get('type') as string;
     const pageCount = parseInt(formData.get('pageCount') as string);
-    const author = formData.get('author') as string;
     const file = formData.get('file') as File;
 
-    if (!title || !type || !pageCount || !author || !file) {
+    if (!title || !type || !pageCount || !file) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -66,9 +77,13 @@ export async function POST(request: Request) {
         title,
         type,
         pageCount,
-        author,
+        userId: session.user.id,
         priceId: price.id,
         filePath,
+      },
+      include: {
+        price: true,
+        user: true,
       },
     });
 

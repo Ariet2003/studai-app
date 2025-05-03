@@ -7,6 +7,14 @@ const nextConfig = {
       'randomuser.me' // Для тестовых аватаров
     ],
   },
+  reactStrictMode: true,
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(pdf)$/i,
+      type: 'asset/resource'
+    })
+    return config
+  }
 }
 
 module.exports = nextConfig 
