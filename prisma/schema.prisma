@@ -50,4 +50,27 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model ReadyWork {
+  id          String   @id @default(cuid())
+  title       String
+  type        String   // Реферат, СРС, Доклад, Курсовая
+  pageCount   Int
+  author      String
+  price       Price    @relation(fields: [priceId], references: [id])
+  priceId     String
+  filePath    String   // Путь к файлу в public/works
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Price {
+  id          String      @id @default(cuid())
+  workType    String      // Реферат, СРС, Доклад, Курсовая
+  pageRange   String      // 10, 20, 30, 40
+  amount      Int
+  works       ReadyWork[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 } 

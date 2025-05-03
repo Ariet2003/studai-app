@@ -27,4 +27,323 @@ body {
   body {
     @apply antialiased;
   }
+}
+
+/* Стили для docx-preview */
+.docx-wrapper {
+  background: white;
+  padding: 20px;
+  min-height: 100%;
+}
+
+.docx-wrapper .docx {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 14pt;
+  line-height: 1.5;
+  padding: 2.54cm;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  max-width: 210mm;
+}
+
+.docx-wrapper .docx p {
+  margin-bottom: 1em;
+  text-align: justify;
+}
+
+.docx-wrapper .docx h1 {
+  font-size: 16pt;
+  font-weight: bold;
+  margin: 1em 0;
+}
+
+.docx-wrapper .docx h2 {
+  font-size: 14pt;
+  font-weight: bold;
+  margin: 1em 0;
+}
+
+.docx-wrapper .docx table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.docx-wrapper .docx td,
+.docx-wrapper .docx th {
+  border: 1px solid black;
+  padding: 8px;
+}
+
+/* Стили для предпросмотра документа */
+.document-preview {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 14pt;
+  line-height: 1.5;
+  color: #000;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: white;
+  box-sizing: border-box;
+}
+
+.document-preview .page {
+  max-width: 100%;
+  margin: 0 auto;
+  background: white;
+}
+
+/* Заголовки */
+.document-preview h1.title {
+  font-size: 16pt;
+  font-weight: bold;
+  text-align: center;
+  margin: 1em 0;
+}
+
+.document-preview h1 {
+  font-size: 16pt;
+  font-weight: bold;
+  margin: 1em 0;
+}
+
+.document-preview h2 {
+  font-size: 14pt;
+  font-weight: bold;
+  margin: 1em 0;
+}
+
+.document-preview h3 {
+  font-size: 13pt;
+  font-weight: bold;
+  margin: 1em 0;
+}
+
+/* Параграфы и текст */
+.document-preview p {
+  margin: 0.5em 0;
+  text-indent: 1.25em;
+}
+
+/* Отступы для оглавления */
+.document-preview .toc-1 {
+  padding-left: 0;
+  margin: 0.3em 0;
+}
+
+.document-preview .toc-2 {
+  padding-left: 1.5em;
+  margin: 0.3em 0;
+}
+
+.document-preview .toc-3 {
+  padding-left: 3em;
+  margin: 0.3em 0;
+}
+
+/* Медиа-запросы для адаптивности */
+@media (min-width: 768px) {
+  .document-preview {
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .document-preview {
+    padding: 2.5rem;
+  }
+}
+
+/* Таблицы */
+.document-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  page-break-inside: avoid;
+}
+
+.document-preview table td,
+.document-preview table th {
+  border: 1px solid #000;
+  padding: 8px;
+  vertical-align: top;
+}
+
+/* Списки */
+.document-preview ul,
+.document-preview ol {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.document-preview li {
+  margin: 0.5em 0;
+}
+
+/* Изображения */
+.document-preview img {
+  max-width: 100%;
+  height: auto;
+  margin: 1em auto;
+  display: block;
+  page-break-inside: avoid;
+}
+
+/* Дополнительные стили форматирования */
+.document-preview strong {
+  font-weight: bold;
+}
+
+.document-preview em {
+  font-style: italic;
+}
+
+.document-preview u {
+  text-decoration: underline;
+}
+
+/* Отступы */
+.document-preview .indent-1 {
+  padding-left: 1.25cm;
+}
+
+.document-preview .indent-2 {
+  padding-left: 2.5cm;
+}
+
+.document-preview .indent-3 {
+  padding-left: 3.75cm;
+}
+
+/* Колонтитулы */
+.document-preview .header {
+  position: absolute;
+  top: -15mm; /* 20mm - 5mm для отступа от края */
+  left: 0;
+  right: 0;
+  height: 12.7mm;
+  font-size: 12pt;
+  line-height: 1.2;
+}
+
+.document-preview .footer {
+  position: absolute;
+  bottom: -15mm; /* 20mm - 5mm для отступа от края */
+  left: 0;
+  right: 0;
+  height: 12.7mm;
+  font-size: 12pt;
+  line-height: 1.2;
+}
+
+/* Сноски */
+.document-preview .footnote {
+  font-size: 10pt;
+  line-height: 1.2;
+  margin-top: 2em;
+  padding-top: 1em;
+  border-top: 1px solid #000;
+}
+
+.document-preview .footnote-ref {
+  vertical-align: super;
+  font-size: 0.8em;
+}
+
+/* Многоколоночный текст */
+.document-preview .multi-column-2 {
+  column-count: 2;
+  column-gap: 1cm;
+}
+
+.document-preview .multi-column-3 {
+  column-count: 3;
+  column-gap: 1cm;
+}
+
+/* Размеры страниц */
+.document-preview.a4 {
+  width: 210mm;
+  min-height: 297mm;
+}
+
+.document-preview.letter {
+  width: 215.9mm;
+  min-height: 279.4mm;
+  padding: 25.4mm 25.4mm;
+}
+
+/* Улучшенные стили для таблиц */
+.document-preview table.no-borders td,
+.document-preview table.no-borders th {
+  border: none;
+}
+
+.document-preview table.vertical-borders td,
+.document-preview table.vertical-borders th {
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+  border-top: none;
+  border-bottom: none;
+}
+
+.document-preview table.horizontal-borders td,
+.document-preview table.horizontal-borders th {
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: none;
+  border-right: none;
+}
+
+/* Улучшенные интервалы */
+.document-preview .spacing-1-0 {
+  line-height: 1.0;
+}
+
+.document-preview .spacing-1-15 {
+  line-height: 1.15;
+}
+
+.document-preview .spacing-1-5 {
+  line-height: 1.5;
+}
+
+.document-preview .spacing-2-0 {
+  line-height: 2.0;
+}
+
+/* Дополнительные стили форматирования */
+.document-preview .highlight {
+  background-color: yellow;
+}
+
+.document-preview .strikethrough {
+  text-decoration: line-through;
+}
+
+.document-preview .subscript {
+  vertical-align: sub;
+  font-size: 0.8em;
+}
+
+.document-preview .superscript {
+  vertical-align: super;
+  font-size: 0.8em;
+}
+
+/* Улучшенные отступы */
+.document-preview .hanging-indent {
+  text-indent: -1.25cm;
+  padding-left: 1.25cm;
+}
+
+.document-preview .first-line-indent {
+  text-indent: 1.25cm;
+}
+
+.document-preview .no-indent {
+  text-indent: 0;
 } 
