@@ -4,19 +4,30 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { DocumentTextIcon } from '@heroicons/react/24/outline';
+import { DocumentTextIcon, UserIcon, LanguageIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 import WorkPreviewModal from '@/app/components/WorkPreviewModal';
+import SearchBar from '@/app/components/SearchBar';
+import WorkFilters, { FilterOptions, SortOption } from '@/app/components/WorkFilters';
+import Pagination from '@/app/components/Pagination';
 import { ReadyWork } from '@/types/work';
+
+const ITEMS_PER_PAGE = 50;
 
 export default function ReadyWorksPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [works, setWorks] = useState<ReadyWork[]>([]);
-  const [selectedType, setSelectedType] = useState<string>('all');
+  const [filteredWorks, setFilteredWorks] = useState<ReadyWork[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedWork, setSelectedWork] = useState<ReadyWork | null>(null);
-
-  const workTypes = ['all', 'Реферат', 'СРС', 'Доклад', 'Курсовая'];
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<FilterOptions>({
+    type: '',
+    pageRange: '',
+    language: '',
+  });
+  const [sortBy, setSortBy] = useState<SortOption>('newest');
 
   useEffect(() => {
     const fetchWorks = async () => {
@@ -27,6 +38,7 @@ export default function ReadyWorksPage() {
         }
         const data = await response.json();
         setWorks(data);
+        setFilteredWorks(data);
       } catch (error) {
         console.error('Error fetching works:', error);
       } finally {
@@ -37,10 +49,56 @@ export default function ReadyWorksPage() {
     fetchWorks();
   }, []);
 
+  useEffect(() => {
+    let result = [...works];
+
+    // Поиск
+    if (searchQuery) {
+      result = result.filter(work => 
+        work.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Фильтры
+    if (filters.type) {
+      result = result.filter(work => work.type === filters.type);
+    }
+
+    if (filters.language) {
+      result = result.filter(work => work.language === filters.language);
+    }
+
+    if (filters.pageRange) {
+      result = result.filter(work => {
+        const pages = work.pageCount;
+        switch (filters.pageRange) {
+          case 'до 10':
+            return pages <= 10;
+          case '10-20':
+            return pages > 10 && pages <= 20;
+          case '20-30':
+            return pages > 20 && pages <= 30;
+          case '30 и более':
+            return pages > 30;
+          default:
+            return true;
+        }
+      });
+    }
+
+    // Сортировка
+    result.sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+      return sortBy === 'newest' ? dateB - dateA : dateA - dateB;
+    });
+
+    setFilteredWorks(result);
+    setCurrentPage(1);
+  }, [searchQuery, filters, sortBy, works]);
+
   const handlePurchase = async (work: ReadyWork) => {
-    // В будущем здесь будет интеграция с платежной системой
     try {
-      // Временное решение: сразу скачиваем файл
       window.open(`${work.filePath}`, '_blank');
       setSelectedWork(null);
     } catch (error) {
@@ -56,9 +114,14 @@ export default function ReadyWorksPage() {
     );
   }
 
+  const totalPages = Math.ceil(filteredWorks.length / ITEMS_PER_PAGE);
+  const paginatedWorks = filteredWorks.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <div className="min-h-screen bg-[#0A0F23]">
-      {/* Header */}
       <header className="bg-[#181F38] border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
@@ -83,44 +146,37 @@ export default function ReadyWorksPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-2xl font-bold text-white mb-8">Готовые работы</h1>
-
-        {/* Фильтры */}
         <div className="mb-8">
-          <div className="flex flex-wrap gap-4">
-            {workTypes.map((type) => (
-              <button
-                key={type}
-                onClick={() => setSelectedType(type)}
-                className={`px-4 py-2 rounded-lg transition-all ${
-                  selectedType === type
-                    ? 'bg-[#454CEE] text-white'
-                    : 'bg-[#181F38] text-gray-400 hover:bg-[#242B44] hover:text-white'
-                }`}
-              >
-                {type === 'all' ? 'Все типы' : type}
-              </button>
-            ))}
+          <h1 className="text-2xl font-bold text-white mb-6">Готовые работы</h1>
+          
+          <div className="space-y-6">
+            <SearchBar onSearch={setSearchQuery} />
+            <WorkFilters onFilterChange={setFilters} onSortChange={setSortBy} />
           </div>
         </div>
 
-        {/* Список работ */}
-        {works.length === 0 ? (
+        {paginatedWorks.length === 0 ? (
           <div className="bg-[#181F38] rounded-xl p-8 text-center">
             <DocumentTextIcon className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400 mb-4">Пока нет доступных работ</p>
+            <p className="text-gray-400 mb-4">
+              {searchQuery || filters.type || filters.pageRange || filters.language
+                ? 'Нет работ, соответствующих выбранным критериям'
+                : 'Пока нет доступных работ'}
+            </p>
             <button
-              onClick={() => router.push('/dashboard')}
+              onClick={() => {
+                setSearchQuery('');
+                setFilters({ type: '', pageRange: '', language: '' });
+              }}
               className="px-6 py-2 bg-[#454CEE] hover:bg-[#3339AA] text-white font-medium rounded-lg transition-colors"
             >
-              Вернуться на главную
+              Сбросить фильтры
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {works
-              .filter((work) => selectedType === 'all' || work.type === selectedType)
-              .map((work) => (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {paginatedWorks.map((work) => (
                 <div
                   key={work.id}
                   onClick={() => setSelectedWork(work)}
@@ -129,31 +185,57 @@ export default function ReadyWorksPage() {
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="text-lg font-semibold text-white mb-2">{work.title}</h3>
-                      <p className="text-gray-400 text-sm">Автор: {work.user.name || 'Аноним'}</p>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <UserIcon className="h-4 w-4 text-[#454CEE]" />
+                          <p className="text-gray-400 text-sm">Автор: {work.user.name || 'Аноним'}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <LanguageIcon className="h-4 w-4 text-[#454CEE]" />
+                          <p className="text-gray-400 text-sm">Язык: {work.language}</p>
+                        </div>
+                      </div>
                     </div>
                     <span className="inline-block px-3 py-1 bg-[#0A0F23] text-[#454CEE] rounded-full text-sm font-medium">
                       {work.type}
                     </span>
                   </div>
                   <div className="flex items-center justify-between mt-4">
-                    <div className="text-gray-400 text-sm">{work.pageCount} страниц</div>
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handlePurchase(work);
-                      }}
-                      className="px-4 py-2 bg-gradient-to-r from-[#454CEE] to-[#3339AA] hover:from-[#3339AA] hover:to-[#454CEE] text-white font-medium rounded-lg transition-all duration-300"
-                    >
-                      Купить за {work.price.amount} сом
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <DocumentDuplicateIcon className="h-4 w-4 text-[#454CEE]" />
+                      <span className="text-gray-400 text-sm">{work.pageCount} страниц</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <div className="text-gray-400 text-sm line-through">{work.price.amount} сом</div>
+                        <div className="text-white font-medium">{work.price.amount / 2} сом</div>
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePurchase(work);
+                        }}
+                        className="px-4 py-2 bg-gradient-to-r from-[#454CEE] to-[#3339AA] hover:from-[#3339AA] hover:to-[#454CEE] text-white font-medium rounded-lg transition-all duration-300"
+                      >
+                        Купить
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
-          </div>
+            </div>
+
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
+          </>
         )}
       </main>
 
-      {/* Модальное окно предпросмотра */}
       <WorkPreviewModal
         work={selectedWork}
         onClose={() => setSelectedWork(null)}

@@ -1,10 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      'lh3.googleusercontent.com', // Для изображений из Google
-      'ui-avatars.com', // Для сгенерированных аватаров
-      'randomuser.me' // Для тестовых аватаров
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ui-avatars.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'randomuser.me',
+      },
     ],
   },
   reactStrictMode: true,

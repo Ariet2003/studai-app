@@ -23,6 +23,7 @@ export interface ReadyWork {
   user: User;
   price: Price;
   filePath: string;
+  language: string;
   createdAt: string;
   updatedAt: string;
 } 

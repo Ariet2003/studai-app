@@ -80,6 +80,7 @@ export async function POST(request: Request) {
         userId: session.user.id,
         priceId: price.id,
         filePath,
+        language: "Русский",
       },
       include: {
         price: true,

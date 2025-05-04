@@ -1,4 +1,4 @@
-import { XMarkIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, MinusIcon, PlusIcon, DocumentTextIcon, LanguageIcon, CurrencyDollarIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 import { ReadyWork } from '@/types/work';
 import { useState, useEffect } from 'react';
 
@@ -111,12 +111,15 @@ export default function WorkPreviewModal({ work, onClose, onPurchase }: WorkPrev
             <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 pr-8">
               {work.title}
             </h3>
-            <div className="text-gray-400 space-y-2">
-              <p>Тип работы: {work.type}</p>
-              <p>Количество страниц: {work.pageCount}</p>
-              <p className="text-lg sm:text-xl font-semibold text-white">
-                Стоимость: {work.price.amount} сом
-              </p>
+            <div className="text-gray-400 space-y-1">
+              <div className="flex items-center gap-2">
+                <DocumentTextIcon className="h-5 w-5 text-[#454CEE]" />
+                <p>Тип работы: {work.type}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <LanguageIcon className="h-5 w-5 text-[#454CEE]" />
+                <p>Язык: {work.language}</p>
+              </div>
             </div>
           </div>
 
@@ -165,13 +168,30 @@ export default function WorkPreviewModal({ work, onClose, onPurchase }: WorkPrev
                 </div>
               </div>
 
-              <div className="flex justify-end">
-                <button
-                  onClick={() => onPurchase(work)}
-                  className="px-6 py-3 bg-gradient-to-r from-[#454CEE] to-[#3339AA] hover:from-[#3339AA] hover:to-[#454CEE] text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 text-base"
-                >
-                  Купить работу
-                </button>
+              <div className="flex justify-between items-center">
+                <div className="text-gray-400 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <DocumentDuplicateIcon className="h-5 w-5 text-[#454CEE]" />
+                    <p>Количество страниц: {work.pageCount}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CurrencyDollarIcon className="h-5 w-5 text-[#454CEE]" />
+                    <div>
+                      <p className="text-gray-400 text-sm line-through mb-0.5">Старая цена: {work.price.amount} сом</p>
+                      <p className="text-lg font-semibold text-[#454CEE]">
+                        {work.price.amount / 2} сом
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => onPurchase(work)}
+                    className="px-6 py-3 bg-gradient-to-r from-[#454CEE] to-[#3339AA] hover:from-[#3339AA] hover:to-[#454CEE] text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 text-base"
+                  >
+                    Купить работу
+                  </button>
+                </div>
               </div>
             </>
           ) : (

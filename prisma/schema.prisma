@@ -63,6 +63,7 @@ model ReadyWork {
   price       Price    @relation(fields: [priceId], references: [id])
   priceId     String
   filePath    String   // Путь к файлу в public/works
+  language    String   @default("Русский") // Язык работы
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
