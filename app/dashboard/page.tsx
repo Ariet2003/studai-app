@@ -322,7 +322,10 @@ export default function DashboardPage() {
           <div className="space-y-8">
             {/* Быстрые действия */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <button className="flex items-center gap-3 p-6 bg-[#181F38] hover:bg-[#242B44] rounded-xl transition-colors group">
+              <button 
+                onClick={() => router.push('/new-order')}
+                className="flex items-center gap-3 p-6 bg-[#181F38] hover:bg-[#242B44] rounded-xl transition-colors group"
+              >
                 <div className="p-3 bg-[#454CEE]/10 rounded-lg group-hover:bg-[#454CEE]/20 transition-colors">
                   <DocumentTextIcon className="w-6 h-6 text-[#454CEE]" />
                 </div>
@@ -373,7 +376,7 @@ export default function DashboardPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {stats.userWorkHistory.slice(0, 4).map((work) => (
+                        {stats.userWorkHistory.slice(0, 10).map((work) => (
                           <tr 
                             key={work.id}
                             className="border-b border-gray-700/50 hover:bg-[#242B44] transition-colors cursor-pointer"
